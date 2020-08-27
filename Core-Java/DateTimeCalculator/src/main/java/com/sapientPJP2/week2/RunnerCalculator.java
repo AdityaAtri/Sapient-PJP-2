@@ -28,6 +28,9 @@ public class RunnerCalculator {
 
     
 	public static void main(String[] args) throws ParseException, IOException {
+	PrintWriter writer = new PrintWriter("History.txt");
+	writer.print("");
+	writer.close();
 	while(true) {
 		
 		System.out.println("Option 1 - Add, Subtract between two dates and express the output in days, dates, weeks, months");
