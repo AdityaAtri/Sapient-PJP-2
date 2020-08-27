@@ -9,24 +9,25 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 
 public class RunnerCalculator {
 	
 	static int monthDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	
-	public static class Date  
+	public static class date  
     { 
         int d, m, y; 
-        public Date(int d, int m, int y) 
+        public date(int d, int m, int y) 
         { 
             this.d = d; 
             this.m = m;
             this.y = y; 
         }  
     }; 
+
     
 	public static void main(String[] args) throws ParseException, IOException {
-		
 	while(true) {
 		
 		System.out.println("Option 1 - Add, Subtract between two dates and express the output in days, dates, weeks, months");
@@ -59,33 +60,26 @@ public class RunnerCalculator {
 			int month2 = Integer.parseInt(date2.substring(3,5));
 			int year2 = Integer.parseInt(date2.substring(6,10));
 			
-			Date dt1 = new Date(day1,month1,year1);
-			Date dt2 = new Date(day2,month2,year2);
+			date dt1 = new date(day1,month1,year1);
+			date dt2 = new date(day2,month2,year2);
 			
-			// calculation of total number of days 
-			int totalDays = DiffTwoDates.getDifference(dt1, dt2);
-			System.out.println("Total number of Days : " + totalDays);
-			
-			// calculation of total number of months 
-			int totalMonths = 0;
-			int diffMonths = (dt2.y - dt1.y - 1)*12;
-			int i=dt1.m+1;
-			while(i<=12) {
-				i++;
-				totalMonths++;
-			}
-			i=1;
-			while(i<dt2.m) {
-				i++;
-				totalMonths++;
-			}
-			totalMonths+=(diffMonths+((monthDays[dt1.m-1]-dt1.d)+dt2.d)/31);
-			
-			int remdayMonths = ((monthDays[dt1.m-1]-dt1.d)+dt2.d)%31;
-			int remdayWeeks = totalDays%7; 
 
-			System.out.println("In Months : " + totalMonths + " Months " + remdayMonths + " Days");
-			System.out.println("In Weeks : " + totalDays/7 + " Weeks " + remdayWeeks + " Days");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String givenDate1 = Integer.toString(dt1.y)+"-"+Integer.toString(dt1.m)+"-"+Integer.toString(dt1.d);
+			Calendar cal1 = Calendar.getInstance();
+			cal1.setTime(sdf.parse(givenDate1));
+			
+			String givenDate2 = Integer.toString(dt2.y)+"-"+Integer.toString(dt2.m)+"-"+Integer.toString(dt2.d);
+			Calendar cal2 = Calendar.getInstance();
+			cal2.setTime(sdf.parse(givenDate2));
+			
+			Date d1 = cal1.getTime();
+			Date d2 = cal2.getTime(); 
+			
+			int numDays = (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)); 
+			int numWeeks = numDays/7; 
+			int numMonths = (cal2.get(Calendar.YEAR) - cal1.get(Calendar.YEAR)) * 12 + cal2.get(Calendar.MONTH) - cal1.get(Calendar.MONTH);
+			
 			
 			try
 			{
@@ -93,9 +87,9 @@ public class RunnerCalculator {
 			    FileWriter fw = new FileWriter(filename,true);
 			    fw.write("Input Option 1 : Date1 : "+date1 + " Date2 : "+date2 + "\n");
 			    fw.write("Output :"+ "\n");
-			    fw.write("Difference between two dates in terms of days : "+ totalDays + "\n");
-			    fw.write("Difference between two dates in terms of months :"+ totalMonths + " Months " + remdayMonths + " Days"+ "\n");
-			    fw.write("Difference between two dates in terms of weeks :"+ totalDays/7 + " Weeks " + remdayWeeks + " Days"+ "\n");
+			    fw.write("Difference between two dates in terms of days : "+ numDays + "\n");
+			    fw.write("Difference between two dates in terms of months :"+ numMonths + " Months "+ "\n");
+			    fw.write("Difference between two dates in terms of weeks :"+ numWeeks + " Weeks "+ "\n");
 			    fw.write("================================================================================================"+ "\n");
 			    fw.close();
 			}
@@ -112,7 +106,7 @@ public class RunnerCalculator {
 			int month = Integer.parseInt(date.substring(3,5));
 			int year = Integer.parseInt(date.substring(6,10));
 			
-			Date dt = new Date(day,month,year);
+			date dt = new date(day,month,year);
 			
 			System.out.println("Enter the value of N ");
 			int n = scan.nextInt();
@@ -128,20 +122,18 @@ public class RunnerCalculator {
 			String newDate = null;
 			
 			if(operation.equals("add")) {
-				if(input.equals("year")) {
-					dt.y +=n;
-					System.out.println("New Date after adding " + n + " years : " + dt.d+"-"+dt.m+"-"+dt.y);
+				if(input.equals("years")) {
+					cal.add(Calendar.YEAR,n); 
+					newDate = sdf.format(cal.getTime()); 
+					System.out.println("New Date after adding " + n + " years : "+newDate);
 				}
 				else if(input.equals("months")) {
-					dt.y += n/12 + (dt.m+n%12)/12; 
-					if((dt.m+n%12)/12 == 0) {
-						dt.m += n%12; 
-					}
-					else dt.m = (dt.m+n%12)%12;
-					System.out.println("New Date after adding " + n + " months : " + dt.d+"-"+dt.m+"-"+dt.y);
+					cal.add(Calendar.MONTH,n); 
+					newDate = sdf.format(cal.getTime());  
+					System.out.println("New Date after adding " + n + " months : "+newDate);
 				}
-				else if(input.equals("days")) {
-					cal.add(Calendar.DAY_OF_MONTH, 32);
+				else if(input.equals("days")){
+					cal.add(Calendar.DATE,n); 
 					newDate = sdf.format(cal.getTime());
 					System.out.println("New Date after adding " + n + " days : "+newDate);
 				}
@@ -149,14 +141,14 @@ public class RunnerCalculator {
 				{
 				    String filename= "history.txt";
 				    FileWriter fw = new FileWriter(filename,true);
-				    fw.write("Input Option 2 : Date : "+date + "Add N : "+ n+ "\n" );
+				    fw.write("Input Option 2 : Date : "+date + " Add N : "+ n+ "\n" );
 				    fw.write("Output :"+ "\n");
 				    if(input.equals("year"))
-				    	fw.write("New Date after adding " + n + " years : " + dt.d+"-"+dt.m+"-"+dt.y+ "\n");
+				    	fw.write("New Date after adding " + n + " years : " + newDate + "\n");
 				    else if(input.equals("months"))
-				    	fw.write("New Date after adding " + n + " months : " + dt.d+"-"+dt.m+"-"+dt.y+ "\n");
+				    	fw.write("New Date after adding " + n + " months : " + newDate + "\n");
 				    else if(input.equals("days"))
-				    	fw.write("New Date after adding " + n + " days : " + newDate+ "\n");
+				    	fw.write("New Date after adding " + n + " days : " + newDate + "\n");
 				    fw.write("================================================================================================"+ "\n");
 				    fw.close();
 				}
@@ -185,7 +177,7 @@ public class RunnerCalculator {
 				{
 				    String filename= "history.txt";
 				    FileWriter fw = new FileWriter(filename,true);
-				    fw.write("Input Option 2 : Date : "+date + "Subtract N : "+ n + "\n");
+				    fw.write("Input Option 2 : Date : "+date + " Subtract N : "+ n + "\n");
 				    fw.write("Output :"+ "\n");
 				    if(input.equals("year"))
 				    	fw.write("New Date after subtracting " + n + " years : "+newDate+ "\n");
@@ -210,7 +202,7 @@ public class RunnerCalculator {
 			int month = Integer.parseInt(date.substring(3,5));
 			int year = Integer.parseInt(date.substring(6,10));
 			
-			Date dt = new Date(day,month,year);
+			date dt = new date(day,month,year);
 			String givenDate = Integer.toString(dt.y)+"-"+Integer.toString(dt.m)+"-"+Integer.toString(dt.d);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
@@ -239,7 +231,7 @@ public class RunnerCalculator {
 			int month = Integer.parseInt(date.substring(3,5));
 			int year = Integer.parseInt(date.substring(6,10));
 			
-			Date dt = new Date(day,month,year);
+			date dt = new date(day,month,year);
 			String givenDate = Integer.toString(dt.y)+"-"+Integer.toString(dt.m)+"-"+Integer.toString(dt.d);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
@@ -274,8 +266,8 @@ public class RunnerCalculator {
 			int month2 = Integer.parseInt(date2.substring(3,5));
 			int year2 = Integer.parseInt(date2.substring(6,10));
 			
-			Date dt1 = new Date(day1,month1,year1);
-			Date dt2 = new Date(day2,month2,year2);
+			date dt1 = new date(day1,month1,year1);
+			date dt2 = new date(day2,month2,year2);
 			
 			String givenDate = Integer.toString(dt1.y)+"-"+Integer.toString(dt1.m)+"-"+Integer.toString(dt1.d);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -434,21 +426,6 @@ public class RunnerCalculator {
 		}
 		else if(inputOption == 8) {
 			System.out.println("Closing the Calculator");
-			PrintWriter pw = new PrintWriter("history.txt");
-			pw.close();
-			String filename= "history.txt";
-		    FileWriter fw = new FileWriter(filename,true);
-		    fw.write("========================PRINTING THE HISTORY LOGS==============================================="+"\n");
-			fw.write("Option 1 - Add, Subtract between two dates and express the output in days, dates, weeks, months"+"\n");
-			fw.write("Option 2 - Add, Subtract 'n' Days, Months, Weeks to the given date and derive the final date"+"\n");
-			fw.write("Option 3 - Determine the Day of the Week for a given date"+"\n");
-			fw.write("Option 4 - Determine the Week number for a given a date"+"\n");
-			fw.write("Option 5 - Adding two dates"+"\n");
-			fw.write("Option 6 - See the History of all operations performed"+"\n");
-			fw.write("Option 7 - Wants to enter the NLP phrase ?");
-			fw.write("Option 8 - Close the file"+"\n");
-			fw.write("================================================================================================"+"\n");
-			fw.close();
 			System.exit(1);
 		}
 	}

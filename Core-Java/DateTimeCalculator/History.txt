@@ -1,15 +1,21 @@
-========================PRINTING THE HISTORY LOGS===============================================
-Option 1 - Add, Subtract between two dates and express the output in days, dates, weeks, months
-Option 2 - Add, Subtract 'n' Days, Months, Weeks to the given date and derive the final date
-Option 3 - Determine the Day of the Week for a given date
-Option 4 - Determine the Week number for a given a date
-Option 5 - Adding two dates
-Option 6 - See the History of all operations performed
-Option 7 - Wants to enter the NLP phrase ?Option 8 - Close the file
-================================================================================================
-Input Option 1 : Date1 : 23-04-2020 Date2 : 12-04-2029
+Input Option 1 : Date1 : 23-04-2020 Date2 : 04-05-2020
 Output :
-Difference between two dates in terms of days : 3276
-Difference between two dates in terms of months :107 Months 19 Days
-Difference between two dates in terms of weeks :468 Weeks 0 Days
+Difference between two dates in terms of days : 11
+Difference between two dates in terms of months :1 Months 
+Difference between two dates in terms of weeks :1 Weeks 
+================================================================================================
+Input Option 2 : Date : 23-04-2023 Subtract N : 67
+Output :
+New Date after subtracting 67 months : 2017-09-23
+================================================================================================
+Input Option 4 : Date : 23-09-2021
+Output :
+Week number for the given date : 39
+================================================================================================
+Input Option 3 : Date : 15-09-2017
+Output :
+Day of the week for the given date : 6
+================================================================================================
+Input Option 7 : NLP Phrase conversion : days from now 
+Output :2020-11-24
 ================================================================================================
